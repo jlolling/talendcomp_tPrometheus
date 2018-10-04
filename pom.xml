@@ -1,0 +1,51 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.jlo.talendcomp</groupId>
+  <artifactId>jlo-talendcomp-prometheus</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <dependencies>
+  	<dependency>
+  		<groupId>io.prometheus</groupId>
+  		<artifactId>simpleclient_pushgateway</artifactId>
+  		<version>0.5.0</version>
+  	</dependency>
+  </dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+<!--
+			<plugin>
+				<groupId>de.cimt.talendcomp</groupId>
+				<artifactId>cimt-talendcomp-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>tKarafServiceList</id>
+						<configuration>
+							<componentName>tKarafServiceList</componentName>
+						</configuration>
+						<goals>
+							<goal>component</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>tKarafServiceInstall</id>
+						<configuration>
+							<componentName>tKarafServiceInstall</componentName>
+						</configuration>
+						<goals>
+							<goal>component</goal>
+						</goals>
+					</execution>
+			</plugin>
+-->
+		</plugins>
+	</build>
+</project>
