@@ -1,0 +1,26 @@
+<%@ jet 
+	imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+	" 
+%>
+<% 
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	String cid = node.getUniqueName();
+	String port = ElementParameterParser.getValue(node, "__PORT__");
+   boolean log4jEnabled = "true".equals(org.talend.core.model.process.ElementParameterParser.getValue(node.getProcess(), "__LOG4J_ACTIVATE__")) && 
+   							"JOBLET".equals(node.getComponent().getComponentType().toString()) == false;
+%>
+   de.jlo.talendcomp.prometheus.Endpoint <%=cid%> = new de.jlo.talendcomp.prometheus.Endpoint();
+   globalMap.put("<%=cid%>", <%=cid%>);
+   try {
+	   <%=cid%>.startServer(<%=port%>);
+	} catch (Exception e) {
+<%	if (log4jEnabled) { %>
+		log.error(currentComponent + ": " + e.getMessage(), e);
+<%	} %>
+   		globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage());
+   		throw e;
+	}

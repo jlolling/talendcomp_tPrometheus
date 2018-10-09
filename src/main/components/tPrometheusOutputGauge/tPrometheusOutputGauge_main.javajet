@@ -1,0 +1,51 @@
+<%@ jet 
+	imports="
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.metadata.IMetadataTable 
+		org.talend.core.model.metadata.IMetadataColumn 
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.core.model.utils.NodeUtil
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		java.util.List 
+		java.util.ArrayList 
+	" 
+%>
+<%
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	String cid = node.getUniqueName();
+	IConnection conn = null;
+	List<? extends IConnection> inConns = NodeUtil.getIncomingConnections(node, IConnectionCategory.DATA);
+	if (inConns.size() > 0) {
+		conn = inConns.get(0);
+	}
+	List<IMetadataColumn> listColumns = new ArrayList<IMetadataColumn>(); // dummy
+	List<IMetadataTable> metadatas = node.getMetadataList();
+	if (metadatas != null && metadatas.size() > 0) {
+    	IMetadataTable metadata = metadatas.get(0);
+    	if (metadata != null) {
+    		listColumns = metadata.getListColumns();
+		}
+	}
+   boolean log4jEnabled = "true".equals(org.talend.core.model.process.ElementParameterParser.getValue(node.getProcess(), "__LOG4J_ACTIVATE__")) && 
+   							"JOBLET".equals(node.getComponent().getComponentType().toString()) == false;
+%>
+<%	if (conn != null) { %>
+   try {
+  		<%=cid%>.registerGauge(
+  			<%=conn.getName()%>.metric_name,
+  			<%=conn.getName()%>.metric_help,
+  			<%=conn.getName()%>.metric_label_name);
+  		<%=cid%>.setGaugeValue(
+  			<%=conn.getName()%>.metric_name,
+  			<%=conn.getName()%>.metric_help,
+  			<%=conn.getName()%>.metric_label_value,
+  			<%=conn.getName()%>.metric_value);
+   } catch (Exception e) {
+   	String message = "Set gauge value: " + <%=conn.getName()%>.metric_name + " failed: " + e.getMessage();
+   	globalMap.put("<%=cid%>_ERROR_MESSAGE", message);
+   	throw e;
+   }
+<%	} %>
