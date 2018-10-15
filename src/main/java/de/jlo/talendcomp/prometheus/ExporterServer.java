@@ -11,13 +11,13 @@ import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.exporter.MetricsServlet;
 
-public class Endpoint {
+public class ExporterServer {
 
 	private Map<String, Gauge> gauges = new HashMap<>();
 	private Map<String, Histogram> histograms = new HashMap<>();
 	private Server server;
 
-	public Endpoint() {
+	public ExporterServer() {
 	}
 
 	public void registerGauge(String metricName, String help, String labelName) {

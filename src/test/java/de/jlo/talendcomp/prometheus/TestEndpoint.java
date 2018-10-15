@@ -6,12 +6,12 @@ import org.junit.Test;
 
 public class TestEndpoint {
 	
-	Endpoint e;
+	ExporterServer e;
 	int port = 12345;
 
 	@Before
 	public void setUp() throws Exception {
-		e = new Endpoint();
+		e = new ExporterServer();
 		e.startServer(port);
 	}
 

@@ -13,7 +13,7 @@
    boolean log4jEnabled = "true".equals(org.talend.core.model.process.ElementParameterParser.getValue(node.getProcess(), "__LOG4J_ACTIVATE__")) && 
    							"JOBLET".equals(node.getComponent().getComponentType().toString()) == false;
 %>
-   de.jlo.talendcomp.prometheus.Endpoint <%=cid%> = new de.jlo.talendcomp.prometheus.Endpoint();
+   de.jlo.talendcomp.prometheus.ExporterServer <%=cid%> = new de.jlo.talendcomp.prometheus.ExporterServer();
    globalMap.put("<%=cid%>", <%=cid%>);
    try {
 	   <%=cid%>.startServer(<%=port%>);
