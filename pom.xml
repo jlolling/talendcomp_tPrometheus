@@ -49,9 +49,9 @@
 				<version>2.1-snapshot</version>
 				<executions>
 					<execution>
-						<id>tPrometheusExporter</id>
+						<id>tPrometheusExporterServer</id>
 						<configuration>
-							<componentName>tPrometheusExporter</componentName>
+							<componentName>tPrometheusExporterServer</componentName>
 						</configuration>
 						<goals>
 							<goal>component</goal>

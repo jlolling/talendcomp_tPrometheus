@@ -13,7 +13,7 @@
    boolean log4jEnabled = "true".equals(org.talend.core.model.process.ElementParameterParser.getValue(node.getProcess(), "__LOG4J_ACTIVATE__")) && 
    							"JOBLET".equals(node.getComponent().getComponentType().toString()) == false;
 %>
-   de.jlo.talendcomp.prometheus.ExporterServer <%=cid%> = new de.jlo.talendcomp.prometheus.ExporterServer();
+   de.jlo.talendcomp.prometheus.Exporter <%=cid%> = new de.jlo.talendcomp.prometheus.Exporter();
    globalMap.put("<%=cid%>", <%=cid%>);
    try {
 	   <%=cid%>.startServer(<%=port%>);
@@ -21,6 +21,6 @@
 <%	if (log4jEnabled) { %>
 		log.error(currentComponent + ": " + e.getMessage(), e);
 <%	} %>
-   		globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage());
-   		throw e;
+   	globalMap.put("<%=cid%>_ERROR_MESSAGE", e.getMessage());
+   	throw e;
 	}

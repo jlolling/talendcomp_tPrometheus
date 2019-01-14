@@ -1,0 +1,33 @@
+<%@ jet 
+	imports="
+		org.talend.designer.codegen.config.CodeGeneratorArgument
+		org.talend.core.model.process.INode 
+		org.talend.core.model.process.ElementParameterParser 
+		org.talend.core.model.process.IConnection
+		org.talend.core.model.process.IConnectionCategory
+		org.talend.core.model.utils.NodeUtil
+		java.util.List 
+	" 
+%>
+<% 
+	CodeGeneratorArgument codeGenArgument = (CodeGeneratorArgument) argument;
+	INode node = (INode)codeGenArgument.getArgument();
+	String cid = node.getUniqueName();
+	String port = ElementParameterParser.getValue(node, "__PORT__");
+   boolean log4jEnabled = "true".equals(org.talend.core.model.process.ElementParameterParser.getValue(node.getProcess(), "__LOG4J_ACTIVATE__")) && 
+   							"JOBLET".equals(node.getComponent().getComponentType().toString()) == false;
+	IConnection conn = null;
+	List<? extends IConnection> outConns = NodeUtil.getOutgoingConnections(node, IConnectionCategory.DATA);
+	if (outConns.size() > 0) {
+		conn = outConns.get(0);
+	}
+	String comp = ElementParameterParser.getValue(node, "__COMPONENT__");
+%>
+	de.jlo.talendcomp.prometheus.Exporter <%=cid%> = (de.jlo.talendcomp.prometheus.Exporter) globalMap.get("<%=comp%>");
+   globalMap.put("<%=cid%>", <%=cid%>);
+	String <%=cid%>_body = <%=cid%>.getCurrentMetricSamples();
+	globalMap.put("<%=cid%>_RESPONSE_CONTENT", <%=cid%>_body);
+<%	if (conn != null) { %>
+	<%=conn.getName()%>.response_body = <%=cid%>_body;
+<%	} %>
+   

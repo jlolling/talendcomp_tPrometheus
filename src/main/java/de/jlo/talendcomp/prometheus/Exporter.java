@@ -1,5 +1,8 @@
 package de.jlo.talendcomp.prometheus;
 
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,17 +10,19 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.exporter.MetricsServlet;
+import io.prometheus.client.exporter.common.TextFormat;
 
-public class ExporterServer {
+public class Exporter {
 
 	private Map<String, Gauge> gauges = new HashMap<>();
 	private Map<String, Histogram> histograms = new HashMap<>();
 	private Server server;
 
-	public ExporterServer() {
+	public Exporter() {
 	}
 
 	public void registerGauge(String metricName, String help, String labelName) {
@@ -41,8 +46,7 @@ public class ExporterServer {
 			if (label != null) {
 				gauge
 					.labels(label)
-					.set(
-							value.doubleValue());
+					.set(value.doubleValue());
 			} else {
 				gauge.set(value.doubleValue());
 			}
@@ -71,6 +75,12 @@ public class ExporterServer {
 		} else {
 			g.observe(value);
 		}
+	}
+	
+	public String getCurrentMetricSamples() throws IOException {
+		StringWriter writer = new StringWriter();
+		TextFormat.write004(writer, CollectorRegistry.defaultRegistry.filteredMetricFamilySamples(Collections.emptySet()));
+		return writer.toString();
 	}
 
 	public void startServer(int port) throws Exception {
