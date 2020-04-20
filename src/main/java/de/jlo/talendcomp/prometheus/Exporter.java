@@ -21,6 +21,7 @@ public class Exporter {
 	private Map<String, Gauge> gauges = new HashMap<>();
 	private Map<String, Histogram> histograms = new HashMap<>();
 	private Server server;
+	private String servicePath = "/metrics";
 
 	public Exporter() {
 	}
@@ -92,7 +93,7 @@ public class Exporter {
 		context.setContextPath("/");
 		server.setHandler(context);
 		// Expose Prometheus metrics.
-		context.addServlet(new ServletHolder(new MetricsServlet()), "/metrics");
+		context.addServlet(new ServletHolder(new MetricsServlet()), servicePath);
 		// Add metrics about CPU, JVM memory etc.
 		// we do not need the metrics of THIS jvm!
 		//DefaultExports.initialize();
@@ -108,6 +109,17 @@ public class Exporter {
 				// ignore
 			}
 		}
+	}
+
+	public String getServicePath() {
+		return servicePath;
+	}
+
+	public void setServicePath(String servicePath) {
+		if (servicePath == null || servicePath.trim().isEmpty()) {
+			throw new IllegalArgumentException("service path cannot be null or empty");
+		}
+		this.servicePath = servicePath;
 	}
 
 }
